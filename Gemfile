@@ -41,8 +41,9 @@ group :development, :test do
 end
 
 group :test do
-  gem 'capybara'
   gem 'shoulda'
+  gem 'database_cleaner'
+  gem 'capybara-webkit'
 end
 
 group :development do
