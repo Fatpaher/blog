@@ -2,22 +2,24 @@ require 'rails_helper'
 
 describe CommentsController do
   describe "POST #create" do
-   context "when name and body present" do
-     it "should redirect to post link" do
-       written_post = create :post
+    context "when user signed in" do
+      context "when name and body present" do
+        it "should redirect to post link" do
+          written_post = create :post
 
-       post :create, post_id: written_post.id, comment: attributes_for(:post)
+          post :create, post_id: written_post.id, comment: attributes_for(:post)
 
-       expect(response).to redirect_to(post_path(written_post))
-     end
-     it "should create new comment" do
-       written_post = create :post
+          expect(response).to redirect_to(post_path(written_post))
+        end
+        it "should create new comment" do
+          written_post = create :post
 
-       expect {
-         post :create, post_id: written_post.id, comment: attributes_for(:post)
-       }.to change(Comment, :count).by(+1)
-     end
-   end
+          expect {
+            post :create, post_id: written_post.id, comment: attributes_for(:post)
+          }.to change(Comment, :count).by(+1)
+        end
+      end
+    end
   end
 
   describe "DELETE destroy" do

@@ -7,9 +7,11 @@
     </p>
   </div>
   <p class="del_comment">
-    <%= link_to 'Delete', [comment.post, comment],
-    method: :delete,
-    class:'button',
-    data: { confirm:'Are you shure?' } %>
+    <% if user_signed_in? %>
+      <%= link_to 'Delete', [comment.post, comment],
+        method: :delete,
+        class:'button',
+        data: { confirm:'Are you shure?' } %>
+    <% end %>
   </p>
 </div>
