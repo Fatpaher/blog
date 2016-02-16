@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe PostsController do
-  describe '#create' do
+  describe 'POST create' do
     context "when title present" do
       it "should redirect to post url" do
         post :create, post: {title: 'some title'}
@@ -11,7 +11,7 @@ describe PostsController do
 
       it "should create a new post" do
         expect {
-          post :create, post: FactoryGirl.attributes_for(:post)
+          post :create, post: attributes_for(:post)
         }.to change(Post, :count).by(+1)
       end
     end
@@ -25,7 +25,7 @@ describe PostsController do
     end
   end
 
-  describe "#delete" do
+  describe "DELETE delete" do
     it "should render new" do
       post = create :post
 
