@@ -1,7 +1,7 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe PostsController do
-  describe 'POST create' do
+  describe "POST create" do
 
     context "when user signed in" do
       before :each do
@@ -11,7 +11,7 @@ describe PostsController do
 
       context "when title present" do
         it "should redirect to post url" do
-          post :create, post: {title: 'some title'}
+          post :create, post: { title: "some title" }
 
           expect(response).to redirect_to(post_path(1))
         end
@@ -25,16 +25,16 @@ describe PostsController do
 
       context "when title is empty" do
         it "should render new" do
-          post :create, post: {title: ''}
+          post :create, post: { title: "" }
 
-          expect(response).to render_template('new')
+          expect(response).to render_template("new")
         end
       end
     end
 
     context "when user not signed in" do
       it "should redirect to sign in url" do
-        post :create, post: {title: 'some title'}
+        post :create, post: { title: "some title" }
 
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -107,13 +107,12 @@ describe PostsController do
           post = create :post
 
           put :update, id: post,
-            post: attributes_for(:post, title: 'Changed title',
-                                  body:'Changed body'
-                                )
+                       post: attributes_for(:post, title: "Changed title",
+                                                   body:  "Changed body")
           post.reload
 
-          expect(post.title).to eq('Changed title')
-          expect(post.body).to eq('Changed body')
+          expect(post.title).to eq("Changed title")
+          expect(post.body).to eq("Changed body")
         end
         it "redirect to updated post" do
           post = create :post
@@ -125,13 +124,14 @@ describe PostsController do
       end
       context "with invalid parametrs" do
         it "doesn't change post attributes" do
-          post = create :post, title: 'Original title'
+          post = create :post, title: "Original title"
 
           put :update, id: post,
-            post: attributes_for(:post, title: nil, body:'Changed body')
+                       post: attributes_for(:post, title: nil,
+                                                   body: "Changed body")
 
-          expect(post.title).to eq('Original title')
-          expect(post.body).to_not eq('Changed body')
+          expect(post.title).to eq("Original title")
+          expect(post.body).to_not eq("Changed body")
         end
         it "re-render edit post path" do
           post = create :post
@@ -149,13 +149,12 @@ describe PostsController do
         post = create :post
 
         put :update, id: post,
-          post: attributes_for(:post, title: 'Changed title',
-                                body:'Changed body'
-                              )
+                     post: attributes_for(:post, title: "Changed title",
+                                                 body:  "Changed body")
         post.reload
 
-        expect(post.title).to_not eq('Changed title')
-        expect(post.body).to_not eq('Changed body')
+        expect(post.title).to_not eq("Changed title")
+        expect(post.body).to_not eq("Changed body")
       end
       it "redirect to sign in page" do
         post = create :post

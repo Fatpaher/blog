@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe "User views Pages" do
   describe "About page" do
@@ -8,7 +8,7 @@ describe "User views Pages" do
     end
     it "sees About header" do
       visit about_path
-      expect(page).to have_content('About')
+      expect(page).to have_content("About")
     end
   end
 end

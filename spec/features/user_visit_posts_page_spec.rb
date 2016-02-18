@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe "User visit posts page" do
   it "should include all posts" do
@@ -17,9 +17,9 @@ describe "User visit posts page" do
       login_as user
 
       visit posts_path
-      click_button('New Post')
+      click_button("New Post")
 
-      expect(page).to have_content('New Post')
+      expect(page).to have_content("New Post")
     end
   end
 
@@ -27,13 +27,13 @@ describe "User visit posts page" do
     it "can't visit new post link" do
       visit posts_path
 
-      expect(page).to_not have_content('New Post')
+      expect(page).to_not have_content("New Post")
     end
   end
 
   it "sees All posts header" do
     visit root_path
-    expect(page).to have_content('All posts')
+    expect(page).to have_content("All posts")
   end
 end
 
