@@ -78,7 +78,7 @@ describe PostsController do
         expect(response).to redirect_to(new_user_session_path)
       end
 
-      it "should  destroy the requested post" do
+      it "can't  destroy the requested post" do
         post = create :post, id:1
 
         expect {

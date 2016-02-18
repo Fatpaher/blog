@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe "User visit posts page" do
-  it "should include all posts" do
+  it "sees all posts" do
     posts = create_list :post, 3
 
     visit posts_path
