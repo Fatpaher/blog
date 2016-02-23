@@ -6,6 +6,7 @@ describe "User views Pages" do
       visit about_path
       expect(page).to have_content("Hey! It's about page")
     end
+    
     it "sees About header" do
       visit about_path
       expect(page).to have_content("About")

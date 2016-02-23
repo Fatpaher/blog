@@ -16,6 +16,7 @@ describe CommentsController do
 
           expect(response).to redirect_to(post_path(written_post))
         end
+        
         it "should create new comment" do
           written_post = create :post
 

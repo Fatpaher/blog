@@ -53,6 +53,7 @@ describe PostsController do
         user = create :user
         sign_in user
       end
+
       it "should render new" do
         post = create :post
 
@@ -69,6 +70,7 @@ describe PostsController do
         }.to change(Post, :count).by(-1)
       end
     end
+
     context "when user not signed in" do
       it "should redirect to sign in page" do
         post = create :post
@@ -114,6 +116,7 @@ describe PostsController do
           expect(post.title).to eq("Changed title")
           expect(post.body).to eq("Changed body")
         end
+
         it "redirect to updated post" do
           post = create :post
 
@@ -122,6 +125,7 @@ describe PostsController do
           expect(response).to redirect_to(post)
         end
       end
+
       context "with invalid parametrs" do
         it "doesn't change post attributes" do
           post = create :post, title: "Original title"
@@ -133,6 +137,7 @@ describe PostsController do
           expect(post.title).to eq("Original title")
           expect(post.body).to_not eq("Changed body")
         end
+
         it "re-render edit post path" do
           post = create :post
 
@@ -156,6 +161,7 @@ describe PostsController do
         expect(post.title).to_not eq("Changed title")
         expect(post.body).to_not eq("Changed body")
       end
+      
       it "redirect to sign in page" do
         post = create :post
 
