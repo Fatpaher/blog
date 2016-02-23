@@ -1,6 +1,5 @@
 Simple Blog example
 
-
-Please feel free to use a different markup language if you do not plan to run
+{<img src="https://travis-ci.org/Fatpaher/blog.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/Fatpaher/blog]
 <tt>rake doc:app</tt>.
 {<img src="https://coveralls.io/repos/github/Fatpaher/blog/badge.svg?branch=master" alt="Coverage Status" />}[https://coveralls.io/github/Fatpaher/blog?branch=master]
