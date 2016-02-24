@@ -8,54 +8,37 @@ describe "User visit post page" do
     expect(page).to have_css("h1", post.title)
     expect(page).to have_content(post.body)
     expect(page).to have_content("#{time_ago_in_words(post.created_at)}")
+    expect(page).to have_content(post.user.email)
   end
 
   context "when user signed in" do
     before :each do
-      user = create :user
-      login_as user
+      @user = create :user
+      login_as @user
     end
 
-    it "can edit post" do
-      post = create :post
+    it "can edit own post" do
+      post = create :post, user: @user
 
       visit post_path(post)
       expect(page).to have_link("Edit", edit_post_path(post))
     end
 
-    it "can delete post" do
-      post = create :post
+    it "can't edit another user posts" do
+      another_user_post = create :post, user: create(:user)
+
+      visit post_path(another_user_post)
+
+      expect(page).to_not have_content("Edit")
+    end
+
+    it "can delete own post" do
+      post = create :post, user: @user
 
       visit post_path(post)
       click_link("Delete")
       expect(page).to_not have_link(post.title, post.title)
       expect(page).to_not have_content(post.created_at.strftime("%B, %d, %Y"))
-    end
-
-    it "can leave a new comment" do
-      post = create :post
-
-      visit post_path(post)
-
-      fill_in "Name", with: "Name"
-      fill_in "Body", with: "Comment text"
-      click_button "Create Comment"
-
-      expect(page).to have_content("Name")
-      expect(page).to have_content("Comment text")
-    end
-
-    it "can delete comment" do
-      comment = create :comment
-
-      visit post_path(comment.post)
-
-      within(".comment") do
-        click_on("Delete")
-      end
-
-      expect(page).to_not have_content(comment.name)
-      expect(page).to_not have_content(comment.body)
     end
   end
 

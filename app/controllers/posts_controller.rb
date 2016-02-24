@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    @posts = Post.all.order('created_at DESC')
+    @posts = Post.all.order("created_at DESC")
   end
 
   def show
@@ -14,11 +14,12 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = Post.new(params.require(:post).permit(:title, :body))
+    @post = current_user.posts.build(params.require(:post).permit(:title,
+                                                                  :body))
     if @post.save
       redirect_to @post
     else
-      render 'new'
+      render "new"
     end
   end
 
@@ -27,17 +28,25 @@ class PostsController < ApplicationController
   end
 
   def update
-    @post = Post.find(params[:id])
-    if @post.update(params[:post].permit(:title, :body))
-      redirect_to @post
+    @post = current_user.posts.find_by(params[:id])
+    if !@post.nil?
+      if @post.update(params[:post].permit(:title, :body))
+        redirect_to @post
+      else
+        render "edit"
+      end
     else
-      render 'edit'
+      render status: :forbidden, text: "Acces denied!"
     end
   end
 
   def destroy
-    @post = Post.find(params[:id])
-    @post.destroy
-    redirect_to root_path
+    @post = current_user.posts.find_by(params[:id])
+    if !@post.nil?
+      @post.destroy
+      redirect_to root_path
+    else
+      render status: :forbidden, text: "Acces denied!"
+    end
   end
 end

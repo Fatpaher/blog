@@ -7,5 +7,6 @@ describe Post do
 
   describe "associations" do
     it { should have_many(:comments) }
+    it { should belong_to(:user) }
   end
 end

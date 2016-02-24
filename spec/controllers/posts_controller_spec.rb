@@ -1,14 +1,14 @@
 require "rails_helper"
 
 describe PostsController do
-  describe "POST create" do
 
-    context "when user signed in" do
-      before :each do
-        user = create :user
-        sign_in user
-      end
+  describe "when user signed in" do
+    before :each do
+      @user = create :user
+      sign_in @user
+    end
 
+    describe "POST #create" do
       context "when title present" do
         it "should redirect to post url" do
           post :create, post: { title: "some title" }
@@ -17,9 +17,15 @@ describe PostsController do
         end
 
         it "should create a new post" do
-          expect {
+          expect do
             post :create, post: attributes_for(:post)
-          }.to change(Post, :count).by(+1)
+          end.to change(Post, :count).by(+1)
+        end
+
+        it "assigns current user to post" do
+          expect do
+            post :create, post: attributes_for(:post)
+          end.to change { controller.current_user.posts.count }.by(1)
         end
       end
 
@@ -32,72 +38,39 @@ describe PostsController do
       end
     end
 
-    context "when user not signed in" do
-      it "should redirect to sign in url" do
-        post :create, post: { title: "some title" }
+    describe "DELETE #destroy" do
+      context "his own posts" do
+        it "should render new" do
+          post = create :post, user_id: @user.id
 
-        expect(response).to redirect_to(new_user_session_path)
+          delete :destroy, id: post.id
+
+          expect(response).to redirect_to(root_path)
+        end
+
+        it "should  destroy the requested post" do
+          post = create :post, user_id: @user.id
+
+          expect do
+            delete :destroy, id: post
+          end.to change(Post, :count).by(-1)
+        end
       end
 
-      it "can't create new post" do
-        expect {
-          post :create, post: attributes_for(:post)
-        }.to_not change(Post, :count)
-      end
-    end
-  end
+      context "other user post" do
+        it "returns access denied" do
+          other_user_post = create :post
 
-  describe "DELETE delete" do
-    context "when user signed in" do
-      before :each do
-        user = create :user
-        sign_in user
-      end
+          delete :destroy, id: other_user_post
 
-      it "should render new" do
-        post = create :post
-
-        delete :destroy, id: post.id
-
-        expect(response).to redirect_to(root_path)
-      end
-
-      it "should  destroy the requested post" do
-        post = create :post, id:1
-
-        expect {
-          delete :destroy, id:post
-        }.to change(Post, :count).by(-1)
+          expect(response.status).to eq(403)
+        end
       end
     end
 
-    context "when user not signed in" do
-      it "should redirect to sign in page" do
-        post = create :post
-
-        delete :destroy, id: post.id
-
-        expect(response).to redirect_to(new_user_session_path)
-      end
-
-      it "can't  destroy the requested post" do
-        post = create :post, id:1
-
-        expect {
-          delete :destroy, id:post
-        }.to_not change(Post, :count)
-      end
-    end
-  end
-
-  describe "PUT update" do
-    context "when user signed in" do
-      before :each do
-        user = create :user
-        sign_in user
-      end
+    describe "PUT #update" do
       it "located requested post" do
-        post = create :post
+        post = create :post, user_id: @user.id
 
         put :update, id: post, post: attributes_for(:post)
 
@@ -106,7 +79,7 @@ describe PostsController do
 
       context "with valid attributes" do
         it "change post attributes" do
-          post = create :post
+          post = create :post, user_id: @user.id
 
           put :update, id: post,
                        post: attributes_for(:post, title: "Changed title",
@@ -118,7 +91,7 @@ describe PostsController do
         end
 
         it "redirect to updated post" do
-          post = create :post
+          post = create :post, user_id: @user.id
 
           put :update, id: post, post: attributes_for(:post)
 
@@ -139,36 +112,77 @@ describe PostsController do
         end
 
         it "re-render edit post path" do
-          post = create :post
+          post = create :post, user_id: @user.id
 
           put :update, id: post, post: attributes_for(:post, title: nil)
 
           expect(response).to render_template :edit
         end
       end
-    end
 
-    context "when user not signed in" do
+      it "returns access denied on other user post" do
+        other_user_post = create :post
 
-      it "can't change post attributes" do
-        post = create :post
+        put :update, id: other_user_post
 
-        put :update, id: post,
-                     post: attributes_for(:post, title: "Changed title",
-                                                 body:  "Changed body")
-        post.reload
-
-        expect(post.title).to_not eq("Changed title")
-        expect(post.body).to_not eq("Changed body")
-      end
-      
-      it "redirect to sign in page" do
-        post = create :post
-
-        put :update, id: post, post: attributes_for(:post)
-
-        expect(response).to redirect_to(new_user_session_path)
+        expect(response.status).to eq(403)
       end
     end
   end
+
+  describe "when user not signed in" do
+      describe "POST #create" do
+        it "should redirect to sign in url" do
+          post :create, post: { title: "some title" }
+
+          expect(response).to redirect_to(new_user_session_path)
+        end
+
+        it "can't create new post" do
+          expect do
+            post :create, post: attributes_for(:post)
+          end.to_not change(Post, :count)
+        end
+      end
+
+      describe "DELETE #destroy" do
+        it "should redirect to sign in page" do
+          post = create :post
+
+          delete :destroy, id: post.id
+
+          expect(response).to redirect_to(new_user_session_path)
+        end
+
+        it "can't  destroy the requested post" do
+          post = create :post, id:1
+
+          expect do
+            delete :destroy, id: post
+          end.to_not change(Post, :count)
+        end
+      end
+
+      describe "PUT #update" do
+        it "can't change post attributes" do
+          post = create :post
+
+          put :update, id: post,
+                       post: attributes_for(:post, title: "Changed title",
+                                                   body:  "Changed body")
+          post.reload
+
+          expect(post.title).to_not eq("Changed title")
+          expect(post.body).to_not eq("Changed body")
+        end
+
+        it "redirect to sign in page" do
+          post = create :post
+
+          put :update, id: post, post: attributes_for(:post)
+
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+    end
 end

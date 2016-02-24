@@ -3,10 +3,14 @@
     <%= @post.title %>
   </h1>
   <p class="date">
-    Submited <%= time_ago_in_words(@post.created_at) %> ago
+    Submited <%= time_ago_in_words(@post.created_at) %> ago by <%= @post.author %>
     <% if user_signed_in?  %>
-      | <%= link_to 'Edit post', edit_post_path(@post) %>
+      <% if current_user == @post.user %>
+        | <%= link_to 'Edit post', edit_post_path(@post) %>
+      <% end %>
+      <% if current_user == @post.user %>
       | <%= link_to 'Delete', post_path(@post), method: :delete, data: {confirm: 'Are you shure?'} %>
+      <% end %>
     <% end %>
   </p>
   <p class="body">
@@ -17,7 +21,11 @@
     <h2><%= pluralize(@post.comments.count, 'Comment')%></h2>
     <%= render @post.comments %>
 
-    <h3>Add a comment</h3>
-    <%= render 'comments/form' %>
+    <% if user_signed_in? %>
+      <h3>Add a comment</h3>
+      <%= render 'comments/form' %>
+    <% else %>
+      <h3>You should sign in to leave a comment</h3>
+    <% end %>
   </div>
 </div>
