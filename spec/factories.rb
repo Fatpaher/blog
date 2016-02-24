@@ -6,7 +6,7 @@ FactoryGirl.define do
   factory :comment do
     post
     name { Faker::Name::title }
-    body { Faker::Hipster.paragraph }
+    body { Faker::Hipster.paragraphs }
   end
   factory :post do
     title { Faker::Name.title }
