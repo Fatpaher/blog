@@ -22,7 +22,9 @@
     <% end %>
     <div class="buttons">
       <% if user_signed_in? %>
-        <button class="button"><%= link_to 'New Post', new_post_path %></button>
+        <% if current_user.role != "user" %>
+          <button class="button"><%= link_to 'New Post', new_post_path %></button>
+        <% end %>
         <button class="button"><%= link_to 'Log Out',
                                    destroy_user_session_path,
                                    method: :delete %></button>

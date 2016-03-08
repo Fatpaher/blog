@@ -29,24 +29,24 @@ class PostsController < ApplicationController
 
   def update
     @post = current_user.posts.find_by(params[:id])
-    if !@post.nil?
+    if @post
       if @post.update(params[:post].permit(:title, :body))
         redirect_to @post
       else
         render "edit"
       end
     else
-      render status: :forbidden, text: "Acces denied!"
+      render status: :forbidden, text: "Access denied!"
     end
   end
 
   def destroy
     @post = current_user.posts.find_by(params[:id])
-    if !@post.nil?
+    if @post
       @post.destroy
       redirect_to root_path
     else
-      render status: :forbidden, text: "Acces denied!"
+      render status: :forbidden, text: "Access denied!"
     end
   end
 end

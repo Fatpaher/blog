@@ -1,0 +1,10 @@
+<div id="user_profile">
+  <h1>Profile</h1>
+  <%= @user.email %>
+  <p>Status <%= @user.role %></p>
+  <% if current_user.role == "user" || @user.role == "user" %>
+    <%= link_to "Delete Profile", user_path(@user),
+                                  method: :delete,
+                                  data: {confirm: 'Are you shure?'} %>
+  <% end %>
+</div>

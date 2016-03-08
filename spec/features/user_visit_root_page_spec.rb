@@ -17,10 +17,10 @@ describe "User visit posts page" do
     expect(page).to have_content("All posts")
   end
 
-  context "when user signed in" do
+  context "signed in as admin" do
     it "able to go to new post link" do
-      user = create :user
-      login_as user
+      admin = create :admin
+      login_as admin
 
       visit root_path
 
@@ -28,23 +28,49 @@ describe "User visit posts page" do
       expect(page).to have_link("New Post", new_post_path)
     end
 
-    it "sees log out button" do
-      user = create :user
-      login_as user
+    it "sees users list button" do
+      admin = create :admin
+      login_as admin
 
+      visit root_path
+
+      expect(page).to have_link("All Users", users_path)
+    end
+  end
+
+  context "signed in as user" do
+    before :each do
+      @user = create :user
+      login_as @user
+    end
+
+    it "can't see button New Post" do
+      visit root_path
+
+      expect(page).to_not have_content("New Post")
+    end
+
+    it "sees logout button " do
       visit root_path
 
       expect(page).to have_content("Log Out")
     end
+
+    it "sees profile link" do
+      visit root_path
+
+      expect(page).to have_link("Profile", user_path(@user))
+    end
   end
 
-  context "when user not log in" do
+  context "not log in" do
     it "should be able to go to log in page" do
       visit root_path
 
       click_link "Login"
       expect(page).to have_content("Log in")
     end
+
     it "should be able to go to sign up page" do
       visit root_path
 
