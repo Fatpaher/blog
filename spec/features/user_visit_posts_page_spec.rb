@@ -26,11 +26,6 @@ describe "User visit posts page" do
 
     expect(page).to have_content("a" * 137 + "...")
   end
-
-  it "sees All posts header" do
-    visit root_path
-    expect(page).to have_content("All posts")
-  end
 end
 
 def post_content(post)

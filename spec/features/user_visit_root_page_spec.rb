@@ -12,11 +12,6 @@ describe "User visit posts page" do
     expect(page).to have_link("Email", "href=mailto:fatpaher@gmail.com")
   end
 
-  it "sees All posts title" do
-    visit root_path
-    expect(page).to have_content("All posts")
-  end
-
   context "signed in as admin" do
     it "able to go to new post link" do
       admin = create :admin
@@ -24,7 +19,7 @@ describe "User visit posts page" do
 
       visit root_path
 
-      click_button("New Post")
+      click_on("New Post")
       expect(page).to have_link("New Post", new_post_path)
     end
 

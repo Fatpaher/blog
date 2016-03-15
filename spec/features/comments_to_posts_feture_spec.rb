@@ -22,13 +22,11 @@ feature "User leave comment to post" do
     end
 
     it "can delete comment his own comments" do
+      pending
       comment = create :comment, id: @user
 
       visit post_path(comment.post)
-
-      within(".comment") do
-        click_on("Delete")
-      end
+      click_button("Delete comment")
 
       expect(page).to_not have_content(comment.name)
       expect(page).to_not have_content(comment.body)

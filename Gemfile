@@ -14,6 +14,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise'
 gem 'coveralls', require: false
 gem "pundit"
+gem "bootstrap-sass"
 
 
 group :development, :test do
