@@ -14,19 +14,23 @@
           <% if current_user.role == "admin" %>
             <li><%= link_to "All Users", users_path %></li>
           <% end %>
-        <li><%= link_to "Profile", user_path(current_user)%></li>
-          <% if current_user.role != "user" %>
-            <li><%= link_to 'New Post', new_post_path %></li>
+          <% if ["writer", "admin"].include? current_user.role %>
+            <%= render "layouts/writer_dropdown" %>
           <% end %>
-          <li><%= link_to 'Log Out', destroy_user_session_path, method: :delete %></li>
+          <% if ["editor", "admin"].include? current_user.role %>
+            <%= render "layouts/editor_dropdown" %>
+          <% end %>
+          <li><%= link_to "Profile", user_path(current_user)%></li>
+          <% if current_user.role != "user" %>
+            <li><%= link_to 'New Post', new_admin_post_path %></li>
+          <% end %>
+            <li><%= link_to 'Log Out', destroy_user_session_path, method: :delete %></li>
         <% else %>
           <li><%= link_to 'Login',new_user_session_path %></li>
           <li><%= link_to 'Sign up', new_user_registration_path %></li>
         <% end %>
-        <li><%= link_to 'About', about_path %></li>
       </ul>
     </div>
   </div>
-
 </div>
 </div>

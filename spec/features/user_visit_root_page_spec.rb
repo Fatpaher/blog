@@ -13,23 +13,23 @@ describe "User visit posts page" do
   end
 
   context "signed in as admin" do
-    it "able to go to new post link" do
-      admin = create :admin
+    before :each do
+      admin = create :user, :admin
       login_as admin
-
+    end
+    it "able to go to new post link" do
       visit root_path
 
       click_on("New Post")
-      expect(page).to have_link("New Post", new_post_path)
+      expect(page).to have_link("New Post", new_admin_post_path)
     end
 
-    it "sees users list button" do
-      admin = create :admin
-      login_as admin
-
+    it "sees admin controls menu" do
       visit root_path
 
       expect(page).to have_link("All Users", users_path)
+      expect(page).to have_css(".dropdown", "Editor Menu")
+      expect(page).to have_css(".dropdown", "Writer menu")
     end
   end
 
@@ -55,6 +55,18 @@ describe "User visit posts page" do
       visit root_path
 
       expect(page).to have_link("Profile", user_path(@user))
+    end
+
+    it "can't see writer menu" do
+      visit root_path
+
+      expect(page).to_not have_content("Writer menu")
+    end
+
+    it "can't see editor menu" do
+      visit root_path
+
+      expect(page).to_not have_content("Editor menu")
     end
   end
 

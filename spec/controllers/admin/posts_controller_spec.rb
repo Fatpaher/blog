@@ -1,10 +1,10 @@
 require "rails_helper"
 
-describe PostsController do
+describe Admin::PostsController do
 
-  describe "when user signed in" do
+  describe "when user signed in as admin" do
     before :each do
-      @user = create :user
+      @user = create :user, :admin
       sign_in @user
     end
 

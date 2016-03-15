@@ -1,10 +1,22 @@
 Rails.application.routes.draw do
-devise_for :users
-resources :users, only: [:index, :show, :destroy]
-resources :posts do
-  resources :comments
-end
-root 'posts#index'
+  devise_for :users
+  resources :users, only: [:index, :show, :destroy]
+  resources :posts, only: [:index, :show] do
+    resources :comments
+  end
+
+  namespace :admin do
+    resources :posts, except: [:show] do
+      collection do
+        get :drafts, action: :index, status: :draft
+        get :pending, action: :index, status: :pending
+        get :reviewed, action: :index, status: :reviewed
+        get :published, action: :index, status: :published
+      end
+    end
+  end
+
+  root 'posts#index'
   get '/about', to: 'pages#about'
 
   # The priority is based upon order of creation: first created -> highest priority.

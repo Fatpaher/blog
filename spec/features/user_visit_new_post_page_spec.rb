@@ -2,19 +2,19 @@ require "rails_helper"
 
 describe "User visit new post page" do
   it "sees Back to all posts title" do
-    visit new_post_path
+    visit new_admin_post_path
 
     expect(page).to have_content("Back to all posts")
   end
 
-  context "when user signed in" do
+  context "when user signed in as admin" do
     before :each do
-      user = create :user
+      user = create :user, :admin
       login_as user
     end
 
     it "should be able to write new post" do
-      visit new_post_path
+      visit new_admin_post_path
 
       fill_in "Title", with: "Post title"
       fill_in "Body", with: "Post body"
@@ -25,7 +25,7 @@ describe "User visit new post page" do
     end
 
     it "can't create post with empty title" do
-      visit new_post_path
+      visit new_admin_post_path
 
       fill_in "Title", with: ""
       click_button "Create Post"

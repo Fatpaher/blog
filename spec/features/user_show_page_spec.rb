@@ -3,7 +3,7 @@ require "rails_helper"
 describe "User visit user page" do
   describe "sign in as admin" do
     before :each do
-      @admin = create :admin
+      @admin = create :user, :admin
       login_as @admin
     end
 
@@ -17,7 +17,7 @@ describe "User visit user page" do
 
     context "visit other admin page" do
       it "can't delete other admin profile" do
-        other_admin = create :admin
+        other_admin = create :user, :admin
 
         visit user_path other_admin
 

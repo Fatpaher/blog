@@ -1,18 +1,22 @@
+<h1><%= @header %></h1>
 <% @posts.each do |post| %>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3>
-        <%= link_to post.title, post %>
-        <small class="pull-right"><%= post.created_at.strftime("%B, %d, %Y") %></small>
-      </h3>
-    </div>
-    <div class="panel-body">
-      <%= truncate post.body, length: 140 %>
-    </div>
-    <div class="panel-footer">
-      <div class="btn btn-info">
-        <%= link_to "Read More", post %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3>
+          <%= link_to post.title, post %>
+          <small class="pull-right"><%= post.created_at.strftime("%B, %d, %Y") %></small>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <%= truncate post.body, length: 140 %>
+      </div>
+      <div class="panel-footer">
+        <div class="btn btn-info">
+          <%= link_to "Read More", post %>
+        </div>
+        <div class="btn btn-info">
+          <%= link_to pluralize(post.comments.count, 'Comment'), post_path(post) %>
+        </div>
       </div>
     </div>
-  </div>
 <% end %>

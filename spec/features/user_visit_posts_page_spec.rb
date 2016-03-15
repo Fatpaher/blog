@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe "User visit posts page" do
   it "sees all posts" do
-    posts = create_list :post, 3
+    posts = create_list :post, 3, :published
 
     visit posts_path
 
@@ -12,7 +12,7 @@ describe "User visit posts page" do
   end
 
   it "sees body of post if it shorter than 140 characters" do
-    create :post, body: "a" * 139
+    create :post, :published, body: "a" * 139
 
     visit posts_path
 
@@ -20,11 +20,27 @@ describe "User visit posts page" do
   end
 
   it "sees preview of post body" do
-    create :post, body: "a" * 500
+    create :post, :published, body: "a" * 500
 
     visit posts_path
 
     expect(page).to have_content("a" * 137 + "...")
+  end
+
+  it "sees Read more button" do
+    post = create :post, :published
+
+    visit posts_path
+
+    expect(page).to have_link("Read More", post_path(post))
+  end
+
+  it "sees Comments count" do
+    post = create :post, :published, :with_comments
+
+    visit posts_path
+
+    expect(page).to have_link("#{post.comments.count} Comment", post_path(post))
   end
 end
 

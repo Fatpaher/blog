@@ -4,6 +4,7 @@ class CommentsController < ApplicationController
     post = Post.find(params[:post_id])
     comment = post.comments.build(params[:comment].permit(:name, :body))
     comment.user_id = current_user.id
+    comment.name = comment.user.email
     if comment.save
       redirect_to post_path(post)
       flash[:success] = "Comment added."

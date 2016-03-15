@@ -1,0 +1,12 @@
+<li class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    Writer menu
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li><%= link_to "Drafts", drafts_admin_posts_path %></li>
+    <li><%= link_to "Waiting for review", pending_admin_posts_path %></li>
+    <li><%= link_to "Reviewed", reviewed_admin_posts_path %></li>
+    <li><%= link_to "Published", published_admin_posts_path %></li>
+  </ul>
+</li>

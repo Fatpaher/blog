@@ -1,6 +1,20 @@
 require "rails_helper"
 
 feature "User leave comment to post" do
+  context "signed in as admin" do
+    before :each do
+      @admin = create :user, :admin
+      login_as @admin
+    end
+
+    it "can delete all other comments" do
+      comment = create :comment
+
+      visit post_path(comment.post)
+
+      expect(page).to have_css(".del-comment", "Delete")
+    end
+  end
   context "user signed in" do
     before :each do
       @user = create :user
@@ -12,21 +26,20 @@ feature "User leave comment to post" do
 
       visit post_path(post)
 
-      fill_in "Name", with: "Name"
       fill_in "Body", with: "Comment text"
       click_button "Create Comment"
 
-      expect(page).to have_content("Name")
       expect(page).to have_content("Comment text")
       expect(page).to have_content("Comment added.")
     end
 
     it "can delete comment his own comments" do
-      pending
-      comment = create :comment, id: @user
+      comment = create :comment, user_id: @user.id
 
       visit post_path(comment.post)
-      click_button("Delete comment")
+      within(".del-comment") do
+        click_on("Delete")
+      end
 
       expect(page).to_not have_content(comment.name)
       expect(page).to_not have_content(comment.body)
@@ -38,7 +51,7 @@ feature "User leave comment to post" do
 
       visit post_path(comment.post)
 
-      expect(page).to_not have_css("del_comment", "Delete")
+      expect(page).to_not have_css("Delete")
     end
   end
 

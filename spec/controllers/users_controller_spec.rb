@@ -3,7 +3,7 @@ require "rails_helper"
 describe UsersController do
   describe "sign in as admin" do
     before :each do
-      @admin = create :admin
+      @admin = create :user, :admin
       sign_in @admin
     end
 
@@ -33,7 +33,7 @@ describe UsersController do
 
       context "other admin profile" do
         it "can't delete other admin profile" do
-          other_admin = create :admin
+          other_admin = create :user, :admin
 
           expect do
             delete :destroy, id: other_admin

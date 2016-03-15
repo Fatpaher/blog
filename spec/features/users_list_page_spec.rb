@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe "User visit users list page" do
   before :each do
-    @admin = create :admin
+    @admin = create :user, :admin
     login_as @admin
   end
 

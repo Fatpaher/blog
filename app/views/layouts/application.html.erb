@@ -8,15 +8,14 @@
     <%= csrf_meta_tags %>
   </head>
   <body>
-
-
+  <%= render 'layouts/navbar' %>
     <div class="container">
      <div class="row">
-     <%= render 'layouts/navbar' %>
+
      <%= render 'layouts/sidebar' %>
         <div class="col-md-9">
           <% flash.each do |name, msg| %>
-            <%= content_tag(:div, msg, class: 'alert') %>
+            <%= content_tag(:div, msg, class: "alert") %>
           <% end %>
           <div class="main_content col-md-8">
             <%= yield %>

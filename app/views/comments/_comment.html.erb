@@ -1,15 +1,17 @@
 <div class="comment">
   <p><%= comment.body %></p>
   <small>
-    <%= time_ago_in_words(comment.created_at)%> ago by <%= comment.name %>
+    <%= time_ago_in_words(comment.created_at)%> ago by <%= comment.user.email %>
   </small>
   <% if user_signed_in? %>
   <br>
-    <button type="button" class="btn btn-sm btn-danger">
-      <%= link_to 'Delete comment', [comment.post, comment],
-        method: :delete,
-        class:'button',
-        data: { confirm:'Are you shure?' } %>
-    </button>
+    <% if current_user.role == "admin" || current_user == comment.user %>
+      <button type="button" class="btn btn-sm btn-danger del-comment">
+        <%= link_to 'Delete', [comment.post, comment],
+          method: :delete,
+          class:'button',
+          data: { confirm:'Are you shure?' } %>
+      </button>
+    <% end %>
   <% end %>
 </div>

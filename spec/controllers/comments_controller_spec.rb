@@ -30,17 +30,6 @@ describe CommentsController do
         end
       end
 
-      context "when  name empty" do
-        it "can't create comment" do
-          written_post = create :post
-          expect do
-            post(:create,
-                 post_id: written_post.id,
-                 comment: attributes_for(:comment, name: ""))
-          end.to_not change(Comment, :count)
-        end
-      end
-
       context "when body empty" do
         it "can't create comment" do
           written_post = create :post
