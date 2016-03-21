@@ -13,6 +13,9 @@ Rails.application.routes.draw do
         get :reviewed, action: :index, status: :reviewed
         get :published, action: :index, status: :published
       end
+      member do
+        get :status_change
+      end
     end
   end
 

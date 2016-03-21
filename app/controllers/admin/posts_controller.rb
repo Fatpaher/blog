@@ -2,10 +2,9 @@ class Admin::PostsController < AdminController
   def index
     status = params[:status].to_s
     @header = Post::STATUS_TITLE[status] || "All posts"
-
-    if %w[writer admin].include? current_user.role
+    if current_user.writer?
       @posts = current_user.posts.ordered
-    elsif %w[editor admin].include? current_user.role
+    elsif current_user.editor? || current_user.admin?
       @posts = Post.all.ordered
     else
       redirect_to root_path
@@ -15,6 +14,7 @@ class Admin::PostsController < AdminController
 
   def new
     @post = Post.new
+    @submit_msg = "Create"
   end
 
   def create
@@ -29,10 +29,12 @@ class Admin::PostsController < AdminController
 
   def edit
     @post = Post.find(params[:id])
+    @submit_msg = "Edit"
   end
 
   def update
-    @post = current_user.posts.find_by(params[:id])
+    @post = Post.find(params[:id])
+    authorize @post
     if @post
       if @post.update(post_params)
         redirect_to @post
@@ -45,13 +47,21 @@ class Admin::PostsController < AdminController
   end
 
   def destroy
-    @post = current_user.posts.find_by(params[:id])
-    if @post
-      @post.destroy
-      redirect_to root_path
-    else
-      render status: :forbidden, text: "Access denied!"
-    end
+    @post = Post.find(params[:id])
+    authorize @post
+    @post.destroy
+    redirect_to root_path
+  end
+
+  def status_change
+    @post = if current_user.writer?
+              current_user.posts.find(params[:id])
+            else
+              Post.all.find(params[:id])
+            end
+    @post.status = params[:status]
+    @post.save!
+    redirect_to :back
   end
 
   private

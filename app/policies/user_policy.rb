@@ -7,15 +7,15 @@ class UserPolicy
   end
 
   def index?
-    @current_user.role == "admin"
+    current_user.admin?
   end
 
   def show?
-    @current_user.role == "admin" || current_user == user
+    current_user.admin? || current_user == user
   end
 
   def destroy?
-    (current_user == user && user.role != "admin") ||
-      (current_user.role == "admin" && user.role != "admin")
+    (current_user == user && user.not_admin?) ||
+      (current_user.admin? && user.not_admin?)
   end
 end

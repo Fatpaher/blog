@@ -7,6 +7,14 @@ class PostPolicy
   end
 
   def create?
-    current_user.role == "admin"
+    current_user.admin? || current_user.writer?
+  end
+
+  def update?
+    @current_user.admin? || current_user.id == post.user_id
+  end
+
+  def destroy?
+    @current_user.admin? || current_user.id == post.user_id
   end
 end

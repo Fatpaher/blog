@@ -19,4 +19,20 @@ class User < ActiveRecord::Base
   def set_default_role
     self.role ||= "user"
   end
+
+  def admin?
+    self.role == "admin"
+  end
+
+  def writer?
+    self.role == "writer"
+  end
+
+  def editor?
+    self.role == "editor"
+  end
+
+  def not_admin?
+    self.role != "admin"
+  end
 end

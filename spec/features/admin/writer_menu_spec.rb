@@ -9,11 +9,17 @@ describe "user role eq 'writer'" do
   describe "visit root path" do
     it "sees writer menu" do
       visit root_path
+
       expect(page).to have_content("Writer menu")
       expect(page).to have_content("Drafts")
       expect(page).to have_content("Waiting for review")
       expect(page).to have_content("Reviewed")
       expect(page).to have_content("Published")
+    end
+
+    it "can create new posts" do
+      visit root_path
+      expect(page).to have_link("New Post", new_admin_post_path)
     end
 
     context "drafts" do

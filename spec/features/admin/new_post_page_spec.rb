@@ -7,9 +7,9 @@ describe "User visit new post page" do
     expect(page).to have_content("Back to all posts")
   end
 
-  context "when user signed in as admin" do
+  context "when user signed in as writer" do
     before :each do
-      user = create :user, :admin
+      user = create :user, :writer
       login_as user
     end
 
@@ -18,7 +18,7 @@ describe "User visit new post page" do
 
       fill_in "Title", with: "Post title"
       fill_in "Body", with: "Post body"
-      click_button "Create Post"
+      click_button "Create Draft"
 
       expect(page).to have_content("Post title")
       expect(page).to have_content("Post body")
@@ -28,7 +28,7 @@ describe "User visit new post page" do
       visit new_admin_post_path
 
       fill_in "Title", with: ""
-      click_button "Create Post"
+      click_button "Create Draft"
 
       expect(page).to_not have_css("title", "")
       expect(page).to have_css("h2", "prevented this post from saving")

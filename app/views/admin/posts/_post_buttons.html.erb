@@ -1,0 +1,30 @@
+<p>
+  <%= link_to edit_admin_post_path(post), class: "btn btn-default" do %>
+    <i class="glyphicon glyphicon-edit"> Edit</i>
+  <% end %>
+</p>
+<p>
+  <%= link_to admin_post_path(post),
+                              class: "btn btn-default",
+                              method: :delete,
+                              data: {confirm: "Are you sure?"} do %>
+    <i class="glyphicon glyphicon-remove"> Delete</i>
+  <% end %>
+</p>
+<p>
+  <% if post.status == "draft" && current_user.role == "writer" %>
+    <%= link_to_change_status post, :pending do %>
+      <i class="glyphicon glyphicon-share">Send to review</i>
+    <% end %>
+  <% end %>
+  <% if post.status == "pending" && current_user.role == "editor" %>
+    <%= link_to_change_status post, :reviewed do %>
+      <i class="glyphicon glyphicon-share">Mark as reviewed</i>
+    <% end %>
+  <% end %>
+  <% if post.status == "reviewed" && current_user.role == "editor"%>
+    <%= link_to_change_status post, :published do %>
+      <i class="glyphicon glyphicon-ok">Publish post</i>
+    <% end %>
+  <% end %>
+</p>
