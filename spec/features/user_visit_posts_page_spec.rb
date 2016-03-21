@@ -11,6 +11,16 @@ describe "User visit posts page" do
     end
   end
 
+  it "sees only published posts" do
+    published_post = create :post, :published
+    draft_post = create :post, :draft
+
+    visit posts_path
+
+    expect(page).to have_content(published_post.title)
+    expect(page).to_not have_content(draft_post.title)
+  end
+
   it "sees body of post if it shorter than 140 characters" do
     create :post, :published, body: "a" * 139
 
@@ -41,6 +51,70 @@ describe "User visit posts page" do
     visit posts_path
 
     expect(page).to have_link("#{post.comments.count} Comment", post_path(post))
+  end
+
+  it "should incude links to social sites" do
+    visit posts_path
+
+    expect(page).to have_link("Facebook",
+                              "href=https://www.facebook.com/paul.pavlovsky.3")
+    expect(page).to have_link("Instagram",
+                              "href=https://www.instagram.com/fatpaher/")
+    expect(page).to have_link("Twitter", "href=https://twitter.com/FatPaher")
+    expect(page).to have_link("Email", "href=mailto:fatpaher@gmail.com")
+  end
+
+  context "signed in as user" do
+    before :each do
+      @user = create :user
+      login_as @user
+    end
+
+    it "can't see button New Post" do
+      visit posts_path
+
+      expect(page).to_not have_content("New Post")
+    end
+
+    it "sees logout button " do
+      visit posts_path
+
+      expect(page).to have_content("Log Out")
+    end
+
+    it "sees profile link" do
+      visit posts_path
+
+      expect(page).to have_link("Profile", user_path(@user))
+    end
+
+    it "can't see writer menu" do
+      visit posts_path
+
+      expect(page).to_not have_content("Writer menu")
+    end
+
+    it "can't see editor menu" do
+      visit posts_path
+
+      expect(page).to_not have_content("Editor menu")
+    end
+  end
+
+  context "not log in" do
+    it "should be able to go to log in page" do
+      visit posts_path
+
+      click_link "Login"
+      expect(page).to have_content("Log in")
+    end
+
+    it "should be able to go to sign up page" do
+      visit posts_path
+
+      click_link "Sign up"
+      expect(page).to have_content("Sign up")
+    end
   end
 end
 

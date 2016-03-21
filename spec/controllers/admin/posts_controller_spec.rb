@@ -131,58 +131,58 @@ describe Admin::PostsController do
   end
 
   describe "when user not signed in" do
-      describe "POST #create" do
-        it "should redirect to sign in url" do
-          post :create, post: { title: "some title" }
+    describe "POST #create" do
+      it "should redirect to sign in url" do
+        post :create, post: { title: "some title" }
 
-          expect(response).to redirect_to(new_user_session_path)
-        end
-
-        it "can't create new post" do
-          expect do
-            post :create, post: attributes_for(:post)
-          end.to_not change(Post, :count)
-        end
+        expect(response).to redirect_to(new_user_session_path)
       end
 
-      describe "DELETE #destroy" do
-        it "should redirect to sign in page" do
-          post = create :post
-
-          delete :destroy, id: post.id
-
-          expect(response).to redirect_to(new_user_session_path)
-        end
-
-        it "can't  destroy the requested post" do
-          post = create :post, id:1
-
-          expect do
-            delete :destroy, id: post
-          end.to_not change(Post, :count)
-        end
-      end
-
-      describe "PUT #update" do
-        it "can't change post attributes" do
-          post = create :post
-
-          put :update, id: post,
-                       post: attributes_for(:post, title: "Changed title",
-                                                   body:  "Changed body")
-          post.reload
-
-          expect(post.title).to_not eq("Changed title")
-          expect(post.body).to_not eq("Changed body")
-        end
-
-        it "redirect to sign in page" do
-          post = create :post
-
-          put :update, id: post, post: attributes_for(:post)
-
-          expect(response).to redirect_to(new_user_session_path)
-        end
+      it "can't create new post" do
+        expect do
+          post :create, post: attributes_for(:post)
+        end.to_not change(Post, :count)
       end
     end
+
+    describe "DELETE #destroy" do
+      it "should redirect to sign in page" do
+        post = create :post
+
+        delete :destroy, id: post.id
+
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it "can't  destroy the requested post" do
+        post = create :post, id: 1
+
+        expect do
+          delete :destroy, id: post
+        end.to_not change(Post, :count)
+      end
+    end
+
+    describe "PUT #update" do
+      it "can't change post attributes" do
+        post = create :post
+
+        put :update, id: post,
+                     post: attributes_for(:post, title: "Changed title",
+                                                 body:  "Changed body")
+        post.reload
+
+        expect(post.title).to_not eq("Changed title")
+        expect(post.body).to_not eq("Changed body")
+      end
+
+      it "redirect to sign in page" do
+        post = create :post
+
+        put :update, id: post, post: attributes_for(:post)
+
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
 end
