@@ -23,9 +23,9 @@ describe "User visit post page" do
     end
   end
 
-  context "when user signed in as user" do
+  context "when user signed in as writer" do
     before :each do
-      @user = create :user
+      @user = create :user, :writer
       login_as @user
     end
 

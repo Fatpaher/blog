@@ -7,6 +7,6 @@ class PostPolicy
   end
 
   def create?
-    current_user.role == "admin"
+    ["admin", "writer"].include?(current_user.role)
   end
 end

@@ -9,11 +9,17 @@ describe "user role eq 'writer'" do
   describe "visit root path" do
     it "sees writer menu" do
       visit root_path
+
       expect(page).to have_content("Writer menu")
       expect(page).to have_content("Drafts")
       expect(page).to have_content("Waiting for review")
       expect(page).to have_content("Reviewed")
       expect(page).to have_content("Published")
+    end
+
+    it "can create new posts" do
+      visit root_path
+      expect(page).to have_link("New Post", new_admin_post_path)
     end
 
     context "drafts" do
@@ -78,6 +84,19 @@ describe "user role eq 'writer'" do
           not_to_have: [draft_post, other_user_published_post],
         )
       end
+    end
+  end
+
+  context "while user in drafts" do
+    it "can change messege status from 'drafts' to 'waiting for review'" do
+      post = create :post, :draft, user_id: @writer.id
+
+      visit drafts_admin_posts_path
+
+      click_link "Send to review"
+
+      expect(current_path).to eq drafts_admin_posts_path
+      expect(page).to_not have_content(post.title)
     end
   end
 

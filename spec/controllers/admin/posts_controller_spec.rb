@@ -2,70 +2,66 @@ require "rails_helper"
 
 describe Admin::PostsController do
 
+  shared_examples "can create posts"do
+    context "when title present" do
+      it "should redirect to post url" do
+        post :create, post: { title: "some title" }
+
+        expect(response).to redirect_to(post_path(1))
+      end
+
+      it "should create a new post" do
+        expect do
+          post :create, post: attributes_for(:post)
+        end.to change(Post, :count).by(+1)
+      end
+
+      it "assigns current user to post" do
+        expect do
+          post :create, post: attributes_for(:post)
+        end.to change { controller.current_user.posts.count }.by(1)
+      end
+    end
+
+    context "when title is empty" do
+      it "should render new" do
+        post :create, post: { title: "" }
+
+        expect(response).to render_template("new")
+      end
+    end
+  end
+
+  shared_examples "can delete his own post" do
+    it "should render new" do
+      post = create :post, user_id: @user.id
+
+      delete :destroy, id: post.id
+
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "should  destroy the requested post" do
+      post = create :post, user_id: @user.id
+
+      expect do
+        delete :destroy, id: post
+      end.to change(Post, :count).by(-1)
+    end
+  end
+
   describe "when user signed in as admin" do
     before :each do
       @user = create :user, :admin
       sign_in @user
     end
-
     describe "POST #create" do
-      context "when title present" do
-        it "should redirect to post url" do
-          post :create, post: { title: "some title" }
-
-          expect(response).to redirect_to(post_path(1))
-        end
-
-        it "should create a new post" do
-          expect do
-            post :create, post: attributes_for(:post)
-          end.to change(Post, :count).by(+1)
-        end
-
-        it "assigns current user to post" do
-          expect do
-            post :create, post: attributes_for(:post)
-          end.to change { controller.current_user.posts.count }.by(1)
-        end
-      end
-
-      context "when title is empty" do
-        it "should render new" do
-          post :create, post: { title: "" }
-
-          expect(response).to render_template("new")
-        end
-      end
+      it_behaves_like "can create posts"
     end
 
     describe "DELETE #destroy" do
-      context "his own posts" do
-        it "should render new" do
-          post = create :post, user_id: @user.id
-
-          delete :destroy, id: post.id
-
-          expect(response).to redirect_to(root_path)
-        end
-
-        it "should  destroy the requested post" do
-          post = create :post, user_id: @user.id
-
-          expect do
-            delete :destroy, id: post
-          end.to change(Post, :count).by(-1)
-        end
-      end
-
-      context "other user post" do
-        it "returns access denied" do
-          other_user_post = create :post
-
-          delete :destroy, id: other_user_post
-
-          expect(response.status).to eq(403)
-        end
-      end
+      it_behaves_like "can delete his own post"
+      it "can delete other user post"
     end
 
     describe "PUT #update" do
@@ -126,6 +122,31 @@ describe Admin::PostsController do
         put :update, id: other_user_post
 
         expect(response.status).to eq(403)
+      end
+    end
+  end
+
+  describe "when user signed in as writer" do
+    before :each do
+      @user = create :user, :writer
+      sign_in @user
+    end
+
+    describe "POST #create" do
+      it_behaves_like "can create posts"
+    end
+
+    describe "DELETE #destroy" do
+      it_behaves_like "can delete his own post"
+
+      context "can't delete other user post" do
+        it "returns access denied" do
+          other_user_post = create :post
+
+          delete :destroy, id: other_user_post.id
+
+          expect(response.status).to eq(403)
+        end
       end
     end
   end

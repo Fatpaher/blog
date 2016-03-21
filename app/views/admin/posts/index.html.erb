@@ -15,8 +15,23 @@
       <td><%= post.created_at %></td>
       <td><%= post.updated_at %></td>
       <td>
-        <%= link_to "Edit", edit_admin_post_path(post) %>
-        <%= link_to "Delte", admin_post_path(post), method: :delete, confirm: "Are you sure?" %>
+        <p>
+          <%= link_to edit_admin_post_path(post), class: "btn btn-default" do %>
+            <i class="glyphicon glyphicon-edit"> Edit</i>
+          <% end %>
+        </p>
+        <p>
+          <%= link_to admin_post_path(post), class: "btn btn-default", method: :delete, confirm: "Are you sure?" do %>
+            <i class="glyphicon glyphicon-remove"> Delete</i>
+          <% end %>
+        </p>
+        <p>
+          <% if post.status == "draft" %>
+            <%= link_to pending_admin_posts_path, class: "btn btn-default" do %>
+              <i class="glyphicon glyphicon-share">Send to review</i>
+            <% end %>
+          <% end %>
+        </p>
       </td>
 
     </tr>

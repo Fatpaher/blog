@@ -15,6 +15,7 @@ class Admin::PostsController < AdminController
 
   def new
     @post = Post.new
+    @submit = "Create"
   end
 
   def create
@@ -29,6 +30,7 @@ class Admin::PostsController < AdminController
 
   def edit
     @post = Post.find(params[:id])
+    @submit = "Edit"
   end
 
   def update
@@ -52,6 +54,13 @@ class Admin::PostsController < AdminController
     else
       render status: :forbidden, text: "Access denied!"
     end
+  end
+
+  def pending
+    @post = current_user.posts.find(params[:id])
+    @post.status = "pending"
+    @post.save!
+    redirect_to draft_admin_posts_path
   end
 
   private

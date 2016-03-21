@@ -12,8 +12,6 @@
         <button type="button" class="btn btn-sm">
           <%= link_to 'Edit', edit_admin_post_path(@post) %>
         </button>
-      <% end %>
-      <% if current_user.role == "admin" || current_user == @post.user %>
         <button type="button" class="btn btn-sm">
           <%= link_to 'Delete', admin_post_path(@post),
                                 method: :delete,
