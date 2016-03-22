@@ -21,14 +21,24 @@
           <% end %>
         </p>
         <p>
-          <%= link_to admin_post_path(post), class: "btn btn-default", method: :delete, confirm: "Are you sure?" do %>
+          <%= link_to post, class: "btn btn-default", method: :delete, data: {confirm: "Are you sure?"} do %>
             <i class="glyphicon glyphicon-remove"> Delete</i>
           <% end %>
         </p>
         <p>
-          <% if post.status == "draft" %>
-            <%= link_to pending_admin_posts_path, class: "btn btn-default" do %>
+          <% if post.status == "draft" && current_user.role == "writer" %>
+            <%= link_to status_change_admin_post_path(post, status: :pending), class: "btn btn-default", data: {confirm: "Are you sure?"} do %>
               <i class="glyphicon glyphicon-share">Send to review</i>
+            <% end %>
+          <% end %>
+          <% if post.status == "pending" && current_user.role == "editor" %>
+            <%= link_to status_change_admin_post_path(post, status: :reviewed), class: "btn btn-default", data: {confirm: "Are you sure?"}   do %>
+              <i class="glyphicon glyphicon-share">Mark as reviewed</i>
+            <% end %>
+          <% end %>
+          <% if post.status == "reviewed" && current_user.role == "editor"%>
+            <%= link_to status_change_admin_post_path(post, status: :published), class: "btn btn-default", data: {confirm: "Are you sure?"}   do %>
+              <i class="glyphicon glyphicon-ok">Publish post</i>
             <% end %>
           <% end %>
         </p>

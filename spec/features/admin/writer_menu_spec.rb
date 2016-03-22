@@ -87,18 +87,7 @@ describe "user role eq 'writer'" do
     end
   end
 
-  context "while user in drafts" do
-    it "can change messege status from 'drafts' to 'waiting for review'" do
-      post = create :post, :draft, user_id: @writer.id
 
-      visit drafts_admin_posts_path
-
-      click_link "Send to review"
-
-      expect(current_path).to eq drafts_admin_posts_path
-      expect(page).to_not have_content(post.title)
-    end
-  end
 
   def create_posts(status:)
     other_status = (Post::STATUSES - [status.to_s]).first.to_sym

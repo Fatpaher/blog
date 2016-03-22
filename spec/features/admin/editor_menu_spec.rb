@@ -16,7 +16,7 @@ describe "user role eq 'editor'" do
     end
 
     context "waiting for review" do
-      it "sees page with all posts with'pending' status" do
+      it "sees page with all posts with 'pending' status" do
         posts = create_posts(status: :pending)
         other_user_pending_post, published_post = posts
 
@@ -29,6 +29,27 @@ describe "user role eq 'editor'" do
           not_to_have: published_post,
         )
       end
+    end
+
+    context "reviewed" do
+      it "sees page with all posts with 'pending' status" do
+        posts = create_posts(status: :reviewed)
+        other_user_reviewed_post, published_post = posts
+
+        visit root_path
+        click_link "Reviewed"
+
+        expect_page_to_have(
+          title: "Reviewed",
+          to_have: other_user_reviewed_post,
+          not_to_have: published_post,
+        )
+      end
+    end
+
+    it "can't create new posts" do
+      visit root_path
+      expect(page).to_not have_link("New Post", new_admin_post_path)
     end
 
     context "reviewed" do

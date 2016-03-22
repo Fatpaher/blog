@@ -9,4 +9,8 @@ class PostPolicy
   def create?
     ["admin", "writer"].include?(current_user.role)
   end
+
+  def destroy?
+    @current_user.role == "admin"
+  end
 end

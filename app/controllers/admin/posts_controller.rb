@@ -47,7 +47,7 @@ class Admin::PostsController < AdminController
   end
 
   def destroy
-    @post = current_user.posts.find_by(params[:id])
+    @post = User.find(params[:id])
     if @post
       @post.destroy
       redirect_to root_path
@@ -56,11 +56,16 @@ class Admin::PostsController < AdminController
     end
   end
 
-  def pending
-    @post = current_user.posts.find(params[:id])
-    @post.status = "pending"
+  def status_change
+    if current_user.role == "writer"
+      @post = current_user.posts.find(params[:id])
+    else
+      @post = Post.all.find(params[:id])
+    end
+
+    @post.status = params[:status]
     @post.save!
-    redirect_to draft_admin_posts_path
+    redirect_to :back
   end
 
   private

@@ -32,23 +32,7 @@ describe Admin::PostsController do
     end
   end
 
-  shared_examples "can delete his own post" do
-    it "should render new" do
-      post = create :post, user_id: @user.id
 
-      delete :destroy, id: post.id
-
-      expect(response).to redirect_to(root_path)
-    end
-
-    it "should  destroy the requested post" do
-      post = create :post, user_id: @user.id
-
-      expect do
-        delete :destroy, id: post
-      end.to change(Post, :count).by(-1)
-    end
-  end
 
   describe "when user signed in as admin" do
     before :each do
@@ -60,7 +44,24 @@ describe Admin::PostsController do
     end
 
     describe "DELETE #destroy" do
-      it_behaves_like "can delete his own post"
+      context "can delete his own post" do
+        it "should render new" do
+          post = create :post, user_id: @user
+
+          delete :destroy, id: post
+
+          expect(response).to redirect_to(root_path)
+        end
+
+        it "should  destroy the requested post" do
+          post = create :post, user_id: @user.id
+
+          expect do
+            delete :destroy, id: post.id
+          end.to change(Post, :count).by(-1)
+        end
+      end
+
       it "can delete other user post"
     end
 
@@ -137,16 +138,9 @@ describe Admin::PostsController do
     end
 
     describe "DELETE #destroy" do
-      it_behaves_like "can delete his own post"
-
       context "can't delete other user post" do
-        it "returns access denied" do
-          other_user_post = create :post
+        it "returns access denied"
 
-          delete :destroy, id: other_user_post.id
-
-          expect(response.status).to eq(403)
-        end
       end
     end
   end

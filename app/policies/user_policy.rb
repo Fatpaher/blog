@@ -21,7 +21,7 @@ class UserPolicy
 
 
   def current_user_admin
-    @current_user.role == "admin"
+    @current_user.role == "admin" 
   end
 
   def not_admin

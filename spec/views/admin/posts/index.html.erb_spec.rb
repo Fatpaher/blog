@@ -2,6 +2,7 @@ require "rails_helper"
 
 describe "admin/posts/index.html.erb" do
   it "renders posts as table" do
+    allow(controller).to receive(:current_user).and_return(build(:user))
     posts = [build_stubbed(:post)]
     assign(:posts, posts)
 
@@ -21,6 +22,7 @@ describe "admin/posts/index.html.erb" do
   end
 
   it "renders posts in table" do
+    allow(controller).to receive(:current_user).and_return(build(:user))
     posts = build_stubbed_pair(:post)
     assign(:posts, posts)
 
@@ -42,6 +44,7 @@ describe "admin/posts/index.html.erb" do
 
   context "writer user" do
     it "renders table with correct columns" do
+      allow(controller).to receive(:current_user).and_return(build(:user))
       posts = [build_stubbed(:post)]
       assign(:posts, posts)
 

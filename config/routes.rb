@@ -12,7 +12,9 @@ Rails.application.routes.draw do
         get :pending, action: :index, status: :pending
         get :reviewed, action: :index, status: :reviewed
         get :published, action: :index, status: :published
-        get :pending
+      end
+      member do
+        get :status_change
       end
     end
   end
