@@ -16,6 +16,9 @@ gem 'coveralls', require: false
 gem "pundit"
 gem "bootstrap-sass"
 
+gem "redcarpet"
+gem "markitup-rails"
+
 
 group :development, :test do
   gem 'byebug'

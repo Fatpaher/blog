@@ -4,7 +4,7 @@
     Submited <%= time_ago_in_words(@post.created_at) %> ago by <%= @post.author %>
   </small>
   <div class="panel-body">
-    <p><%= @post.body %></p>
+    <p><%= markdown @post.body %></p>
   </div>
   <div class="panel-footer">
     <% if user_signed_in?  %>
