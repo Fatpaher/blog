@@ -10,6 +10,12 @@ class UsersController < ApplicationController
     authorize @user
   end
 
+  def update
+    @user = User.find(params[:id])
+    @user.update_attributes(params[:user].permit(:role))
+    redirect_to users_path
+  end
+
   def destroy
     user = User.find(params[:id])
     authorize user
